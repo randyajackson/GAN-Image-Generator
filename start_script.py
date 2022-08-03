@@ -1,6 +1,7 @@
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as T
+from torchsummary import summary
 import torch.nn as nn
 from torchvision.utils import save_image
 import torch
@@ -142,22 +143,22 @@ print("defining discriminator")
 discriminator = nn.Sequential(
     # in: 3 x 512 x 512
 
-    nn.Conv2d(3, 1024, kernel_size=4, stride=4, padding=0, bias=False),
+    nn.Conv2d(3, 512, kernel_size=4, stride=2, padding=0, bias=False),
+    nn.BatchNorm2d(512),
+    nn.LeakyReLU(0.2, inplace=True),
+    # out: 512 x 128 x 128
+
+    nn.Conv2d(512, 1024, kernel_size=4, stride=2, padding=0, bias=False),
     nn.BatchNorm2d(1024),
     nn.LeakyReLU(0.2, inplace=True),
-    # out: 1024 x 128 x 128
-
-    nn.Conv2d(1024, 2048, kernel_size=4, stride=4, padding=0, bias=False),
-    nn.BatchNorm2d(2048),
-    nn.LeakyReLU(0.2, inplace=True),
-    # out: 2048 x 32 x 32
+    # out: 1024 x 32 x 32
                    
-    nn.Conv2d(2048, 4096, kernel_size=4, stride=4, padding=0, bias=False),
-    nn.BatchNorm2d(4096),
-    nn.LeakyReLU(0.2, inplace=True),
-    # out: 4096 x 8 x 8 
+    # nn.Conv2d(1024, 2048, kernel_size=4, stride=2, padding=0, bias=False),
+    # nn.BatchNorm2d(2048),
+    # nn.LeakyReLU(0.2, inplace=True),
+    # # out: 2048 x 8 x 8 
 
-    nn.Conv2d(4096, 1, kernel_size=4, stride=1, padding=0, bias=False),
+    nn.Conv2d(1024, 1, kernel_size=4, stride=1, padding=0, bias=False),
     # out: 1 x 1 x 1
 
     nn.Flatten(),
