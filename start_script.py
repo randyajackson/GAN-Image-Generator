@@ -143,22 +143,22 @@ print("defining discriminator")
 discriminator = nn.Sequential(
     # in: 3 x 512 x 512 (512 x 512 feature map)
 
-    nn.Conv2d(3, 512, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.Conv2d(3, 512, kernel_size=8, stride=4, padding=0, bias=False),
     nn.BatchNorm2d(512),
     nn.LeakyReLU(0.2, inplace=True),
     # out: 512 x 128 x 128
 
-    nn.Conv2d(512, 1024, kernel_size=8, stride=8, padding=0, bias=False),
-    nn.BatchNorm2d(1024),
-    nn.LeakyReLU(0.2, inplace=True),
-    # out: 1024 x 32 x 32
-                   
-    nn.Conv2d(1024, 2048, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.Conv2d(512, 2048, kernel_size=8, stride=4, padding=0, bias=False),
     nn.BatchNorm2d(2048),
+    nn.LeakyReLU(0.2, inplace=True),
+    # out: 2048 x 32 x 32
+                   
+    nn.Conv2d(2048, 4096, kernel_size=8, stride=4, padding=0, bias=False),
+    nn.BatchNorm2d(4096),
     nn.LeakyReLU(0.2, inplace=True),
     # # out: 2048 x 8 x 8 
 
-    nn.Conv2d(2048, 1, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.Conv2d(4096, 1, kernel_size=8, stride=1, padding=0, bias=False),
     # out: 1 x 1 x 1
 
     nn.Flatten(),
@@ -166,7 +166,7 @@ discriminator = nn.Sequential(
 
 discriminator = to_device(discriminator, device)
 
-latent_size = 4096
+latent_size = 1024
 
 print("defining generator")
 generator = nn.Sequential(
@@ -182,22 +182,22 @@ generator = nn.Sequential(
     # nn.ReLU(True),
     # # out: 1024 x 128 x 128
     
-    nn.ConvTranspose2d(latent_size, 2048, kernel_size=8, stride=1, padding=0, bias=False),
+    nn.ConvTranspose2d(latent_size, 2048, kernel_size=32, stride=1, padding=0, bias=False),
     nn.BatchNorm2d(2048),
     nn.ReLU(True),
-    # out: 2048 x 8 x 8
+    # out: 2048 x 32 x 32
 
-    nn.ConvTranspose2d(2048, 1024, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.ConvTranspose2d(2048, 1024, kernel_size=32, stride=2, padding=0, bias=False),
     nn.BatchNorm2d(1024),
     nn.ReLU(True),
-    # out: 1024 x 32 x 32
+    # out: 1024 x 64 x 64
 
-    nn.ConvTranspose2d(1024, 512, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.ConvTranspose2d(1024, 512, kernel_size=32, stride=2, padding=0, bias=False),
     nn.BatchNorm2d(512),
     nn.ReLU(True),
     # out: 512 x 128 x 128
 
-    nn.ConvTranspose2d(512, 3, kernel_size=8, stride=8, padding=0, bias=False),
+    nn.ConvTranspose2d(512, 3, kernel_size=32, stride=2, padding=0, bias=False),
     nn.Tanh()
     # out: 3 x 512 x 512
 )
