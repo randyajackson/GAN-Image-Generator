@@ -13,7 +13,7 @@ import torch.nn.functional as F
 DATA_DIR = '/home/development/Desktop/First GAN Project/GAN Image Generator/GAN-Image-Generator/animal-faces/afhq/dog/'
 batch_size = 16
 stats = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
-
+  
 class DeviceDataLoader():
     def __init__(self, dl, device):
         self.dl = dl
@@ -166,38 +166,30 @@ discriminator = nn.Sequential(
 
 discriminator = to_device(discriminator, device)
 
-latent_size = 1024
+latent_size = 64
 
 print("defining generator")
 generator = nn.Sequential(
+    
     # in: latent_size x 1 x 1
 
-    # nn.ConvTranspose2d(4096, 2048, kernel_size=4, stride=2, padding=1, bias=False),
-    # nn.BatchNorm2d(2048),
-    # nn.ReLU(True),
-    # # out: 2048 x 32 x 32
-    
-    # nn.ConvTranspose2d(2048, 1024, kernel_size=4, stride=2, padding=1, bias=False),
-    # nn.BatchNorm2d(1024),
-    # nn.ReLU(True),
-    # # out: 1024 x 128 x 128
-    
     nn.ConvTranspose2d(latent_size, 2048, kernel_size=32, stride=1, padding=0, bias=False),
     nn.BatchNorm2d(2048),
     nn.ReLU(True),
     # out: 2048 x 32 x 32
+    
 
-    nn.ConvTranspose2d(2048, 1024, kernel_size=32, stride=2, padding=0, bias=False),
+    nn.ConvTranspose2d(2048, 1024, kernel_size=32, stride=16, padding=0, bias=False),
     nn.BatchNorm2d(1024),
     nn.ReLU(True),
     # out: 1024 x 64 x 64
 
-    nn.ConvTranspose2d(1024, 512, kernel_size=32, stride=2, padding=0, bias=False),
+    nn.ConvTranspose2d(1024, 512, kernel_size=32, stride=16, padding=0, bias=False),
     nn.BatchNorm2d(512),
     nn.ReLU(True),
     # out: 512 x 128 x 128
 
-    nn.ConvTranspose2d(512, 3, kernel_size=32, stride=2, padding=0, bias=False),
+    nn.ConvTranspose2d(512, 3, kernel_size=32, stride=16, padding=0, bias=False),
     nn.Tanh()
     # out: 3 x 512 x 512
 )
